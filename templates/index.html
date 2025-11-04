@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Startup Success Predictor 🚀</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-top: 15px;
+        }
+
+        .status-online {
+            background: #4caf50;
+            color: white;
+        }
+
+        .status-offline {
+            background: #f44336;
+            color: white;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .checkbox-group {
+            margin-bottom: 20px;
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: auto;
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            margin: 0;
+            font-weight: normal;
+            cursor: pointer;
+        }
+
+        .category-count {
+            display: inline-block;
+            padding: 5px 12px;
+            background: #667eea;
+            color: white;
+            border-radius: 15px;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 14px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+            color: #667eea;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            display: none;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .prediction-badge {
+            font-size: 1.5em;
+            font-weight: bold;
+            padding: 10px 25px;
+            border-radius: 10px;
+        }
+
+        .prediction-success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .prediction-failure {
+            background: #f44336;
+            color: white;
+        }
+
+        .confidence-meter {
+            margin: 20px 0;
+        }
+
+        .confidence-bar {
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            border-radius: 15px;
+            transition: width 1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .confidence-high {
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+        }
+
+        .confidence-medium {
+            background: linear-gradient(90deg, #ff9800, #ffc107);
+        }
+
+        .confidence-low {
+            background: linear-gradient(90deg, #f44336, #e91e63);
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .metric-card {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .metric-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .semantic-scores {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .semantic-scores h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .score-bar-container {
+            margin: 15px 0;
+        }
+
+        .score-bar-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        .score-bar {
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .score-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 1s ease;
+        }
+
+        .insights {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .insights h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .insight-item {
+            padding: 10px;
+            margin: 8px 0;
+            border-left: 3px solid #667eea;
+            background: white;
+            border-radius: 5px;
+        }
+
+        .risk-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .risk-low { background: #4caf50; color: white; }
+        .risk-medium { background: #ff9800; color: white; }
+        .risk-high { background: #f44336; color: white; }
+        .risk-very-high { background: #d32f2f; color: white; }
+
+        .error {
+            background: #ffebee;
+            border: 2px solid #f44336;
+            padding: 15px;
+            border-radius: 8px;
+            color: #c62828;
+            margin: 20px 0;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8em; }
+            .form-row { grid-template-columns: 1fr; }
+            .checkbox-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Startup Success Predictor</h1>
+            <p class="subtitle">AI-Powered Success Prediction with Advanced Semantic Scoring</p>
+            <span class="status-badge" id="statusBadge">Checking...</span>
+        </header>
+
+        <div class="card">
+            <h2>📝 Startup Information</h2>
+            <form id="predictionForm">
+                <div class="form-group">
+                    <label for="startupName">Startup Name *</label>
+                    <input type="text" id="startupName" placeholder="e.g., TechCorp AI" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Company Description * (Used for semantic scoring)</label>
+                    <textarea id="description"
+                              placeholder="Describe your startup, what problem you solve, your technology, target market, and competitive advantage..."
+                              required></textarea>
+                    <small style="color: #666;">💡 The more detailed, the better the semantic analysis will be</small>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="funding">Total Funding (USD)</label>
+                        <input type="number" id="funding" value="0" min="0" step="100000">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="education">Founder Education Quality</label>
+                        <select id="education">
+                            <option value="0">Unknown</option>
+                            <option value="1">Good (University Degree)</option>
+                            <option value="2">Elite (Top-tier University)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="technicalBackground">
+                            Founder has Technical Background
+                        </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="businessBackground">
+                            Founder has Business Background
+                        </label>
+                    </div>
+                </div>
+
+                <div class="checkbox-group">
+                    <label>
+                        Select Categories
+                        <span class="category-count" id="categoryCount">0 selected</span>
+                    </label>
+                    <div class="checkbox-grid" id="categoriesGrid">
+                        <!-- Categories will be loaded here -->
+                    </div>
+                </div>
+
+                <button type="submit" class="btn" id="submitBtn">Predict Success</button>
+            </form>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Computing semantic scores and predicting...</p>
+            </div>
+        </div>
+
+        <!-- Error Display -->
+        <div class="error" id="errorMsg"></div>
+
+        <!-- Results -->
+        <div class="results" id="results">
+            <div class="result-header">
+                <div>
+                    <h2 id="resultName">Startup Name</h2>
+                </div>
+                <div class="prediction-badge" id="predictionBadge">SUCCESS</div>
+            </div>
+
+            <div class="confidence-meter">
+                <h3>Success Probability</h3>
+                <div class="confidence-bar">
+                    <div class="confidence-fill" id="confidenceFill">0%</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value" id="successProb">0%</div>
+                    <div class="metric-label">Success Probability</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="failureProb">0%</div>
+                    <div class="metric-label">Failure Probability</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">
+                        <span class="risk-badge" id="riskBadge">LOW</span>
+                    </div>
+                    <div class="metric-label">Risk Level</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value" id="categoryCountResult">0</div>
+                    <div class="metric-label">Categories</div>
+                </div>
+            </div>
+
+            <div class="semantic-scores">
+                <h3>📊 Semantic Analysis Scores</h3>
+
+                <div class="score-bar-container">
+                    <div class="score-bar-label">
+                        <span>Innovation Score</span>
+                        <span id="innovationScore">0</span>
+                    </div>
+                    <div class="score-bar">
+                        <div class="score-bar-fill" id="innovationBar"></div>
+                    </div>
+                </div>
+
+                <div class="score-bar-container">
+                    <div class="score-bar-label">
+                        <span>Confidence Score</span>
+                        <span id="confidenceScoreValue">0</span>
+                    </div>
+                    <div class="score-bar">
+                        <div class="score-bar-fill" id="confidenceBar"></div>
+                    </div>
+                </div>
+
+                <div class="score-bar-container">
+                    <div class="score-bar-label">
+                        <span>Market Clarity Score</span>
+                        <span id="marketClarityScore">0</span>
+                    </div>
+                    <div class="score-bar">
+                        <div class="score-bar-fill" id="marketClarityBar"></div>
+                    </div>
+                </div>
+
+                <div class="score-bar-container">
+                    <div class="score-bar-label">
+                        <span><strong>Overall Quality Score</strong></span>
+                        <span id="overallQualityScore">0</span>
+                    </div>
+                    <div class="score-bar">
+                        <div class="score-bar-fill" id="overallQualityBar"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="insights">
+                <h3>💡 Key Insights</h3>
+                <div id="insightsList"></div>
+            </div>
+
+            <div class="insights">
+                <h3>📈 Recommendation</h3>
+                <p id="recommendation" style="font-size: 1.1em; font-weight: 600;"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let categories = [];
+
+        // Load categories on page load
+        async function loadCategories() {
+            try {
+                const response = await fetch('/api/categories');
+                const data = await response.json();
+                categories = data.categories;
+
+                const grid = document.getElementById('categoriesGrid');
+                grid.innerHTML = categories.map(cat => `
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="cat_${cat.value}" value="${cat.value}">
+                        <label for="cat_${cat.value}">${cat.label}</label>
+                    </div>
+                `).join('');
+
+                // Add change listeners to update count
+                const checkboxes = grid.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach(cb => {
+                    cb.addEventListener('change', updateCategoryCount);
+                });
+            } catch (error) {
+                console.error('Error loading categories:', error);
+            }
+        }
+
+        // Update category count
+        function updateCategoryCount() {
+            const checkboxes = document.querySelectorAll('#categoriesGrid input[type="checkbox"]:checked');
+            document.getElementById('categoryCount').textContent = `${checkboxes.length} selected`;
+        }
+
+        // Check API status
+        async function checkStatus() {
+            try {
+                const response = await fetch('/api/status');
+                const data = await response.json();
+
+                const badge = document.getElementById('statusBadge');
+                if (data.status === 'online' && data.predictor_loaded) {
+                    badge.textContent = '✅ Online & Ready';
+                    badge.className = 'status-badge status-online';
+                } else {
+                    badge.textContent = '⚠️ Model Not Loaded';
+                    badge.className = 'status-badge status-offline';
+                }
+            } catch (error) {
+                const badge = document.getElementById('statusBadge');
+                badge.textContent = '❌ Offline';
+                badge.className = 'status-badge status-offline';
+            }
+        }
+
+        // Submit form
+        document.getElementById('predictionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Get selected categories
+            const selectedCategories = Array.from(
+                document.querySelectorAll('#categoriesGrid input[type="checkbox"]:checked')
+            ).map(cb => cb.value);
+
+            // Build request data
+            const data = {
+                name: document.getElementById('startupName').value,
+                description: document.getElementById('description').value,
+                funding_total_usd: parseFloat(document.getElementById('funding').value),
+                founder_education_quality: parseInt(document.getElementById('education').value),
+                founder_technical_background: document.getElementById('technicalBackground').checked,
+                founder_business_background: document.getElementById('businessBackground').checked,
+                categories: selectedCategories
+            };
+
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            const error = document.getElementById('errorMsg');
+            const submitBtn = document.getElementById('submitBtn');
+
+            loading.style.display = 'block';
+            results.style.display = 'none';
+            error.style.display = 'none';
+            submitBtn.disabled = true;
+
+            try {
+                const response = await fetch('/api/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    displayResults(result);
+                } else {
+                    showError(result.error || 'An error occurred');
+                }
+            } catch (err) {
+                showError('Failed to connect to server: ' + err.message);
+            } finally {
+                loading.style.display = 'none';
+                submitBtn.disabled = false;
+            }
+        });
+
+        function displayResults(prediction) {
+            const results = document.getElementById('results');
+
+            // Header
+            document.getElementById('resultName').textContent = prediction.name;
+
+            // Prediction badge
+            const badge = document.getElementById('predictionBadge');
+            badge.textContent = prediction.prediction;
+            badge.className = prediction.prediction === 'SUCCESS' ?
+                'prediction-badge prediction-success' :
+                'prediction-badge prediction-failure';
+
+            // Confidence meter
+            const confidence = prediction.success_probability;
+            const fill = document.getElementById('confidenceFill');
+            fill.style.width = confidence + '%';
+            fill.textContent = confidence.toFixed(1) + '%';
+
+            if (confidence >= 70) {
+                fill.className = 'confidence-fill confidence-high';
+            } else if (confidence >= 40) {
+                fill.className = 'confidence-fill confidence-medium';
+            } else {
+                fill.className = 'confidence-fill confidence-low';
+            }
+
+            // Metrics
+            document.getElementById('successProb').textContent =
+                prediction.success_probability.toFixed(1) + '%';
+            document.getElementById('failureProb').textContent =
+                prediction.failure_probability.toFixed(1) + '%';
+            document.getElementById('categoryCountResult').textContent =
+                prediction.category_count;
+
+            const riskBadge = document.getElementById('riskBadge');
+            riskBadge.textContent = prediction.risk_level;
+            riskBadge.className = 'risk-badge risk-' +
+                prediction.risk_level.toLowerCase().replace(' ', '-');
+
+            // Semantic scores
+            setScoreBar('innovationBar', 'innovationScore', prediction.innovation_score);
+            setScoreBar('confidenceBar', 'confidenceScoreValue', prediction.confidence_score);
+            setScoreBar('marketClarityBar', 'marketClarityScore', prediction.market_clarity_score);
+            setScoreBar('overallQualityBar', 'overallQualityScore', prediction.overall_quality_score);
+
+            // Insights
+            const insightsList = document.getElementById('insightsList');
+            if (prediction.insights && prediction.insights.length > 0) {
+                insightsList.innerHTML = prediction.insights
+                    .map(insight => `<div class="insight-item">${insight}</div>`)
+                    .join('');
+            } else {
+                insightsList.innerHTML = '<p>No specific insights available</p>';
+            }
+
+            // Recommendation
+            document.getElementById('recommendation').textContent =
+                prediction.recommendation || 'No recommendation available';
+
+            // Show results
+            results.style.display = 'block';
+            results.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function setScoreBar(barId, labelId, value) {
+            const bar = document.getElementById(barId);
+            const label = document.getElementById(labelId);
+            bar.style.width = value + '%';
+            label.textContent = value.toFixed(1);
+        }
+
+        function showError(message) {
+            const error = document.getElementById('errorMsg');
+            error.textContent = '❌ Error: ' + message;
+            error.style.display = 'block';
+        }
+
+        // Initialize
+        checkStatus();
+        loadCategories();
+    </script>
+</body>
+</html>
