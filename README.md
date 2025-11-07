@@ -1,6 +1,6 @@
 # 🚀 Startup Success Prediction Platform
 
-A comprehensive machine learning platform for predicting startup success using advanced web scraping, semantic analysis, and ensemble ML models. The system achieves **90%+ accuracy** and **55%+ F1-score** in predicting startup outcomes.
+A comprehensive machine learning platform for predicting startup success using advanced web scraping, semantic analysis, and ensemble ML models. The system achieves **88%+ accuracy** and **51%+ F1-score** in predicting startup outcomes.
 
 ## 🎯 Project Overview
 
@@ -51,9 +51,9 @@ This project provides an end-to-end solution for analyzing and predicting startu
 
 | Metric | Score |
 |--------|-------|
-| **Accuracy** | 90%+ |
-| **F1-Score** | 55%+ |
-| **ROC-AUC** | 85%+ |
+| **Accuracy** | 88%+ |
+| **F1-Score** | 51%+ |
+| **ROC-AUC** | 80%+ |
 | **Scraping Speed** | 100+ companies/sec |
 | **Semantic Scoring** | 20k descriptions in 2-3 min |
 
